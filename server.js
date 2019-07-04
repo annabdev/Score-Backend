@@ -19,7 +19,11 @@ const Score = db.collection('Score')
 
 
 app.get('/', async (req, res) => {
-    const result = await Score.find()
+    const result = await Score.aggregate([
+        { $sort: { score: -1}},
+        // { collation: { locale: "en_US", numericOrdering: true } },
+        { $limit:10}
+      ])
     console.log("get")
     res.status(200)
     .send(result)
