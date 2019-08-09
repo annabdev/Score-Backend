@@ -14,20 +14,24 @@ db.then(() => {
 app.use(bodyParser.json())
 app.use(cors())
 
+
 const Score = db.collection('Score')
 
-
+const Games = db.collection('Games')
 
 app.get('/', async (req, res) => {
     const result = await Score.aggregate([
-        { $sort: { score: -1}},
-        // { collation: { locale: "en_US", numericOrdering: true } },
-        { $limit:10}
-      ])
+      
+      { $sort: {score: -1}},
+      { $limit: 10}
+      
+])
     console.log("get")
     res.status(200)
     .send(result)
 })
+
+
 
 app.post('/', async (req, res) => {
     const result = await Score.insert(req.body)
