@@ -20,35 +20,38 @@ const Score = db.collection('Score')
 const Games = db.collection('Games')
 
 app.get('/', async (req, res) => {
-    const result = await Score.aggregate([
-      
-      { $sort: {score: -1}},
-      { $limit: 10}
-      
-])
-    console.log("get")
-    res.status(200)
-    .send(result)
+  const result = await Score.aggregate([
+    { $sort: {score: -1}},
+    { $limit: 10}
+  ])
+  console.log("get")
+  res.status(200)
+  .send(result)
 })
 
-
+app.get('/:name', async (req, res) => {
+  let name = req.params.name
+  const result = await Score.find({"game": name})
+  res.status(200).send(result)
+})
 
 app.post('/', async (req, res) => {
-    const result = await Score.insert(req.body)
-    console.log("Post")
-    res.status(200).send(result) 
-  })
+  const result = await Score.insert(req.body)
+  console.log("Post")
+  res.status(200).send(result) 
+})
 
-  app.put('/:id', async (req, res) => {
-    const result = await Score.findOneAndUpdate(req.params._id, { $set: req.body})
-    console.log("put");
-    res.status(200).send(result); 
-  })
- 
-  app.delete('/:id', async (req, res) => {
-    const result = await Score.findOneAndDelete(req.params.id)
-    console.log("delete")
-    res.status(200)
-    .send(result)
-  }) 
+app.put('/:id', async (req, res) => {
+  const result = await Score.findOneAndUpdate(req.params._id, { $set: req.body})
+  console.log("put");
+  res.status(200).send(result); 
+})
+
+app.delete('/:id', async (req, res) => {
+  const result = await Score.findOneAndDelete(req.params.id)
+  console.log("delete")
+  res.status(200)
+  .send(result)
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
