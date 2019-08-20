@@ -31,7 +31,11 @@ app.get('/', async (req, res) => {
 
 app.get('/:name', async (req, res) => {
   let name = req.params.name
-  const result = await Score.find({"game": name})
+  const result = await Score.aggregate([
+    {"$match": {"game": name}},
+    {"$sort": {"score": -1}},
+    {"$limit": 10}
+  ])
   res.status(200).send(result)
 })
 
